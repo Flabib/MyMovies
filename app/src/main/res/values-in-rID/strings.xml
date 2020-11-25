@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FilmKu</string>
+    <string name="title_movie">Film</string>
+    <string name="title_tv">TV</string>
+    <string name="overview_label">Gambaran</string>
+    <string name="release_date_label">" Tanggal Rilis"</string>
+    <string name="settings">Pengaturan</string>
+    <string name="backdrop">backdrop</string>
+    <string name="poster">poster</string>
+    <string name="poster2">poster2</string>
+    <string name="poster3">poster3</string>
+    <string name="splash_logo">Splash Logo</string>
+</resources>
