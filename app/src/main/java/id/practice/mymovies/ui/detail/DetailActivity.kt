@@ -7,13 +7,15 @@ import android.view.MenuItem
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import id.practice.mymovies.R
-import id.practice.mymovies.data.Movie
-import id.practice.mymovies.data.TV
-import kotlinx.android.synthetic.main.activity_detail.*
-
+import id.practice.mymovies.BuildConfig
+import id.practice.mymovies.data.entity.Movie
+import id.practice.mymovies.data.entity.TV
+import id.practice.mymovies.databinding.ActivityDetailBinding
 
 class DetailActivity : AppCompatActivity() {
+
+    private lateinit var activityDetailBinding: ActivityDetailBinding
+
     companion object {
         const val EXTRA_MOVIE = "extra_movie"
         const val EXTRA_TV = "extra_tv"
@@ -21,73 +23,76 @@ class DetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail)
+
+        activityDetailBinding = ActivityDetailBinding.inflate(layoutInflater)
+        setContentView(activityDetailBinding.root)
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION,
             WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION
         )
+
         supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         title = ""
 
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val movie = intent.getParcelableExtra<Movie>(EXTRA_MOVIE)
         if (movie != null) {
-            tvtitle.text = movie.title
-            original_language.text = movie.originalLanguage
-            overview.text = movie.description
-            release_date.text = movie.releaseDate
-            runtime.text = movie.runtime
+            activityDetailBinding.tvtitle.text = movie.title
+            activityDetailBinding.originalLanguage.text = movie.originalLanguage
+            activityDetailBinding.overview.text = movie.description
+            activityDetailBinding.releaseDate.text = movie.releaseDate
+            activityDetailBinding.voteAverage.text = movie.voteAverage
 
-            Glide.with(this)
-                .load(
-                    resources.getIdentifier(
-                        movie.poster.split("/")[1],
-                        "drawable",
-                        applicationContext.packageName
-                    )
-                )
-                .into(poster)
+            if (movie.poster?.contains("@drawable/") == true) {
+                Glide.with(this)
+                        .load(resources.getIdentifier(movie.poster.split("/")[1], "drawable", applicationContext.packageName))
+                        .into(activityDetailBinding.poster)
+            } else {
+                Glide.with(this)
+                        .load(BuildConfig.IMG_URL + movie.poster)
+                        .into(activityDetailBinding.poster)
+            }
 
-            Glide.with(this)
-                .load(
-                    resources.getIdentifier(
-                        movie.poster.split("/")[1],
-                        "drawable",
-                        applicationContext.packageName
-                    )
-                )
-                .into(backdrop)
+            if (movie.poster?.contains("@drawable/") == true) {
+                Glide.with(this)
+                        .load(resources.getIdentifier(movie.poster.split("/")[1], "drawable", applicationContext.packageName))
+                        .into(activityDetailBinding.backdrop)
+            } else {
+                Glide.with(this)
+                        .load(BuildConfig.IMG_URL + movie.backdrop)
+                        .into(activityDetailBinding.backdrop)
+            }
         }
 
         val tv = intent.getParcelableExtra<TV>(EXTRA_TV)
         if (tv != null) {
-            tvtitle.text = tv.title
-            original_language.text = tv.originalLanguage
-            overview.text = tv.description
-            release_date.text = tv.releaseDate
-            runtime.text = tv.runtime
+            activityDetailBinding.tvtitle.text = tv.title
+            activityDetailBinding.originalLanguage.text = tv.originalLanguage
+            activityDetailBinding.overview.text = tv.description
+            activityDetailBinding.releaseDate.text = tv.releaseDate
+            activityDetailBinding.voteAverage.text = tv.voteAverage
 
-            Glide.with(this)
-                .load(
-                    resources.getIdentifier(
-                        tv.poster.split("/")[1],
-                        "drawable",
-                        applicationContext.packageName
-                    )
-                )
-                .into(poster)
+            if (tv.poster?.contains("@drawable/") == true) {
+                Glide.with(this)
+                        .load(resources.getIdentifier(tv.poster.split("/")[1], "drawable", applicationContext.packageName))
+                        .into(activityDetailBinding.poster)
+            } else {
+                Glide.with(this)
+                        .load(BuildConfig.IMG_URL + tv.poster)
+                        .into(activityDetailBinding.poster)
+            }
 
-            Glide.with(this)
-                .load(
-                    resources.getIdentifier(
-                        tv.poster.split("/")[1],
-                        "drawable",
-                        applicationContext.packageName
-                    )
-                )
-                .into(backdrop)
+            if (tv.poster?.contains("@drawable/") == true) {
+                Glide.with(this)
+                        .load(resources.getIdentifier(tv.poster.split("/")[1], "drawable", applicationContext.packageName))
+                        .into(activityDetailBinding.backdrop)
+            } else {
+                Glide.with(this)
+                        .load(BuildConfig.IMG_URL + tv.backdrop)
+                        .into(activityDetailBinding.backdrop)
+            }
         }
     }
 

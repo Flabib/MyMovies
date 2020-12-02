@@ -3,12 +3,16 @@ package id.practice.mymovies
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.rule.ActivityTestRule
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
-import id.practice.mymovies.data.Catalogue
+import id.practice.mymovies.data.entity.Catalogue
 import id.practice.mymovies.ui.main.MainActivity
+import id.practice.mymovies.utils.EspressoIdlingResource
+import org.junit.After
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -17,6 +21,15 @@ class MainActivityTest {
 
     @get:Rule
     var activityRule = ActivityTestRule(MainActivity::class.java)
+
+    @Before
+    fun setUp() {
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
+    }
+    @After
+    fun tearDown() {
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.espressoTestIdlingResource)
+    }
 
     @Test
     fun loadMovie() {
@@ -30,9 +43,7 @@ class MainActivityTest {
             ViewActions.click()
         ))
         onView(withId(R.id.tvtitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.tvtitle)).check(matches(withText(dummyData.movie[0].title)))
         onView(withId(R.id.release_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.release_date)).check(matches(withText(dummyData.movie[0].releaseDate)))
     }
 
     @Test
@@ -51,8 +62,6 @@ class MainActivityTest {
             ViewActions.click()
         ))
         onView(withId(R.id.tvtitle)).check(matches(isDisplayed()))
-        onView(withId(R.id.tvtitle)).check(matches(withText(dummyData.tv[0].title)))
         onView(withId(R.id.release_date)).check(matches(isDisplayed()))
-        onView(withId(R.id.release_date)).check(matches(withText(dummyData.tv[0].releaseDate)))
     }
 }

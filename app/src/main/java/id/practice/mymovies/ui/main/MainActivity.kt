@@ -14,14 +14,18 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import id.practice.mymovies.R
-import kotlinx.android.synthetic.main.activity_main.*
+import id.practice.mymovies.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var activityMainBinding: ActivityMainBinding
     private var doubleBackToExitPressedOnce = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(activityMainBinding.root)
 
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
@@ -32,8 +36,8 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        nav_view.setupWithNavController(navController)
-        nav_view.setOnNavigationItemReselectedListener {  }
+        activityMainBinding.navView.setupWithNavController(navController)
+        activityMainBinding.navView.setOnNavigationItemReselectedListener {  }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

@@ -1,15 +1,11 @@
 package id.practice.mymovies.ui.main.pages.tv
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import id.practice.mymovies.data.Catalogue
-import id.practice.mymovies.data.TV
+import id.practice.mymovies.data.entity.TV
+import id.practice.mymovies.data.source.CatalogueRepository
+import javax.inject.Inject
 
-class TVViewModel : ViewModel() {
-
-    private val _listData = MutableLiveData<List<TV>>().apply {
-        value = Catalogue.loadData().tv
-    }
-    val listData: LiveData<List<TV>> = _listData
+class TVViewModel @Inject constructor(private val movieRepository: CatalogueRepository): ViewModel() {
+    fun getAllTVs(): LiveData<List<TV>> = movieRepository.getAllTVs()
 }

@@ -2,25 +2,31 @@ package id.practice.mymovies.ui.main.pages.tv
 
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import id.practice.mymovies.R
-import id.practice.mymovies.data.TV
+import id.practice.mymovies.BuildConfig
+import id.practice.mymovies.data.entity.TV
+import id.practice.mymovies.databinding.ItemRowCatalogueBinding
 import id.practice.mymovies.ui.detail.DetailActivity
-import kotlinx.android.synthetic.main.item_row_catalogue.view.*
 
 class TVAdapter : RecyclerView.Adapter<TVAdapter.TVViewHolder>() {
     var listData: List<TV> = listOf()
 
-    inner class TVViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TVViewHolder(private val itemRowCatalogueBinding: ItemRowCatalogueBinding) : RecyclerView.ViewHolder(itemRowCatalogueBinding.root) {
         fun bind(tv: TV) {
             with(itemView) {
-                title.text = tv.title
-                Glide.with(this)
-                    .load(resources.getIdentifier(tv.poster.split("/")[1], "drawable", context.packageName))
-                    .into(poster)
+                itemRowCatalogueBinding.title.text = tv.title
+
+                if (tv.poster?.contains("@drawable/") == true) {
+                    Glide.with(this)
+                            .load(resources.getIdentifier(tv.poster.split("/")[1], "drawable", context.packageName))
+                            .into(itemRowCatalogueBinding.poster)
+                } else {
+                    Glide.with(this)
+                            .load(BuildConfig.IMG_URL + tv.poster)
+                            .into(itemRowCatalogueBinding.poster)
+                }
 
                 setOnClickListener {
                     val intent = Intent(context, DetailActivity::class.java)
@@ -35,9 +41,9 @@ class TVAdapter : RecyclerView.Adapter<TVAdapter.TVViewHolder>() {
         parent: ViewGroup,
         viewType: Int
     ): TVAdapter.TVViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_row_catalogue, parent, false)
+        val itemRowCatalogueBinding = ItemRowCatalogueBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        return TVViewHolder(view)
+        return TVViewHolder(itemRowCatalogueBinding)
     }
 
     override fun onBindViewHolder(holder: TVAdapter.TVViewHolder, position: Int) {

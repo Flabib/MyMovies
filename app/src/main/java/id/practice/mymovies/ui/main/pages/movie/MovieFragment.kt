@@ -5,35 +5,45 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import id.practice.mymovies.R
-import kotlinx.android.synthetic.main.fragment_movie.*
+import id.practice.mymovies.MyApplication
+import id.practice.mymovies.databinding.FragmentMovieBinding
+import javax.inject.Inject
 
 class MovieFragment : Fragment() {
 
-    private lateinit var movieViewModel: MovieViewModel
+    @Inject lateinit var movieViewModel: MovieViewModel
     private var adapter = MovieAdapter()
+    private var _fragmentMovieBinding: FragmentMovieBinding? = null
+    private val fragmentMovieBinding get() = _fragmentMovieBinding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        rv_movie.setHasFixedSize(true)
-        rv_movie.layoutManager = GridLayoutManager(context, 2)
-        rv_movie.adapter = adapter
+        fragmentMovieBinding.rvMovie.setHasFixedSize(true)
+        fragmentMovieBinding.rvMovie.layoutManager = GridLayoutManager(context, 2)
+        fragmentMovieBinding.rvMovie.adapter = adapter
+
+        movieViewModel.getAllMovies().observe(viewLifecycleOwner, {
+            adapter.listData = it
+            adapter.notifyDataSetChanged()
+        })
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        movieViewModel =
-            ViewModelProvider(this).get(MovieViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_movie, container, false)
-        movieViewModel.listData.observe(viewLifecycleOwner, {
-            adapter.listData = it
-        })
-        return root
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
+    ): View {
+        (context?.applicationContext as MyApplication).appComponent?.inject(this)
+        _fragmentMovieBinding = FragmentMovieBinding.inflate(inflater, container, false)
+
+        return fragmentMovieBinding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _fragmentMovieBinding = null
     }
 }
